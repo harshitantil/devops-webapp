@@ -26,12 +26,6 @@ jobs:
       - name: Build project
         run: |
           echo "Building DevOps WebApp..."
- - name: Run tests
-  run: |
-    echo "Running tests..."
-    test -f build/index.html
-    echo "This is a temporary failure test."
-    exit 1
           mkdir -p build
           cp index.html build/
           echo "Build completed successfully."
@@ -61,12 +55,12 @@ jobs:
                   type: "mrkdwn"
                   text: |
                     *✅ CI Pipeline Successful*
-                    
+
                     *Repository:* ${{ github.repository }}
                     *Branch:* ${{ github.ref_name }}
                     *Commit:* ${{ github.event.head_commit.message }}
                     *Status:* SUCCESS
-                    
+
                     <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View GitHub Actions Run>
 
       - name: Send failure notification to Slack
@@ -83,9 +77,9 @@ jobs:
                   type: "mrkdwn"
                   text: |
                     *❌ CI Pipeline Failed*
-                    
+
                     *Repository:* ${{ github.repository }}
                     *Branch:* ${{ github.ref_name }}
                     *Status:* FAILED
-                    
+
                     <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View GitHub Actions Run>
