@@ -40,3 +40,46 @@ jobs:
         run: |
           echo "CI Pipeline completed successfully."
           echo "Build and test stages completed."
+
+      - name: Send success notification to Slack
+        if: success()
+        uses: slackapi/slack-github-action@v4.0.0
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            text: "✅ CI Pipeline Successful"
+            blocks:
+              - type: "section"
+                text:
+                  type: "mrkdwn"
+                  text: |
+                    *✅ CI Pipeline Successful*
+                    
+                    *Repository:* ${{ github.repository }}
+                    *Branch:* ${{ github.ref_name }}
+                    *Commit:* ${{ github.event.head_commit.message }}
+                    *Status:* SUCCESS
+                    
+                    <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View GitHub Actions Run>
+
+      - name: Send failure notification to Slack
+        if: failure()
+        uses: slackapi/slack-github-action@v4.0.0
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            text: "❌ CI Pipeline Failed"
+            blocks:
+              - type: "section"
+                text:
+                  type: "mrkdwn"
+                  text: |
+                    *❌ CI Pipeline Failed*
+                    
+                    *Repository:* ${{ github.repository }}
+                    *Branch:* ${{ github.ref_name }}
+                    *Status:* FAILED
+                    
+                    <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View GitHub Actions Run>
